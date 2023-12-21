@@ -1,0 +1,54 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int         @id @default(autoincrement())
+  username  String
+  email     String      @unique
+  password  String
+  folders   Folder[]
+  subfolder Subfolder[]
+  files     File[]
+}
+
+model Folder {
+  id             Int         @id @default(autoincrement())
+  createdBy      String
+  user           User        @relation(fields: [createdBy], references: [email])
+  folderName     String      @unique
+  folderId       String      @unique
+  createDateTime DateTime    @default(now())
+  subfolders     Subfolder[]
+}
+
+model Subfolder {
+  id             Int      @id @default(autoincrement())
+  createdBy      String
+  user           User     @relation(fields: [createdBy], references: [email])
+  folderName     String   @unique
+  folderId       String   @unique
+  createDateTime DateTime @default(now())
+  parentId       String?
+  parentFolder   Folder?  @relation(fields: [parentId], references: [folderId])
+}
+
+model File {
+  id         Int      @id @default(autoincrement())
+  fileName   String
+  fileSize   Int
+  fileType   String
+  fileId     String   @unique
+  key        String
+  uploadDate DateTime
+  userName   String
+  folderId   String
+  user       User     @relation(fields: [userName], references: [email])
+}
