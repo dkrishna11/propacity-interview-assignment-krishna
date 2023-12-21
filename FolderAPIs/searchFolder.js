@@ -39,7 +39,7 @@ const searchFolder=async(req, res)=>{
     
         return res.status(201).send({
           status: 201,
-          message: "Folder created successfully",
+          message: "Folder Fetched successfully",
           data: {
             usersFolder,
           },
